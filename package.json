@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=14"
+    "node": ">=8.10"
   },
   "bugs": {
     "url": "https://github.com/zanven42/cra-template-typescript-redux-graphql/issues"
