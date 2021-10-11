@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction, AsyncThunkOptions} from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
-import { RootState, AppThunk } from '../app/store'
-import { StateSelector } from '../app/hooks'
+import { RootState, AppThunk } from '../store/store'
+import { StateSelector } from '../store/hooks'
 import { gql } from '@apollo/client';
 import { useApolloClient, ApolloClient} from '@apollo/client';
 
@@ -11,10 +11,15 @@ export interface CountryCurrency {
   currency: string
 }
 
-const initialState: CountryCurrency[] = [];
+export interface CurrencyState {
+  countries: CountryCurrency[]
+}
+const initialState: CurrencyState = {
+  countries: []
+};
 
 export const GetDataQuery = gql`
-query getCountry() {
+query {
   countries(filter: {}) {
     name
     currency
@@ -22,9 +27,7 @@ query getCountry() {
 }
 `;
 export interface GetDataResults {
-  createUser: {
-    countries: CountryCurrency[]
-  }
+  countries: CountryCurrency[]
 }
 
 export interface GetDataVariables {
@@ -34,17 +37,18 @@ export interface GetDataVariables {
     continent: string
   }
 }
-const GetData = createAsyncThunk('user/LoginAsync',async(args: {client: ApolloClient<unknown>, details: GetDataVariables}) => {
+const GetData = createAsyncThunk('currency/GetData',async(args: {client: ApolloClient<unknown>, details: GetDataVariables}) => {
   return args.client.query<GetDataResults,GetDataVariables>({query: GetDataQuery,variables: args.details})
 })
 
 export const actionsAsync = { GetData }
-export const user = createSlice({
-  name: 'user',
+export const currency = createSlice({
+  name: 'currency',
   initialState,
   reducers: {
     Reset: (state) => {
-      state = [];
+      console.log("reset")
+      state.countries = [];
     }
   },
   extraReducers: (builder) => {
@@ -61,7 +65,8 @@ export const user = createSlice({
           console.log(action.payload.error?.message ?? "")
           return
         }
-        state = data
+        console.log("loaded")
+        return {countries: data.countries}
       })
       .addCase(GetData.rejected,(state,action) => {
         console.log("Failed",action.error.message ?? "")
@@ -70,5 +75,5 @@ export const user = createSlice({
 })
 
 // export const state = (state: RootState) => state.user;
-export const { actions,reducer } = user
-export const State = () => StateSelector((state) => state.user)
+export const { actions,reducer } = currency
+export const State = () => StateSelector((state) => state.currency)

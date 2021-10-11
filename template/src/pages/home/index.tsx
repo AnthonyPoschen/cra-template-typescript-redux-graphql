@@ -5,19 +5,24 @@ import { Currency } from '../../reducers/'
 
 export function Home() {
   var dispatch = GetDispatch()
-  var currencies = Currency.State()
+  var {countries} = Currency.State()
+  if(countries === undefined) {
+    countries = []
+  }
   var client = useApolloClient();
   return (
     <div>
-      <span>
-        {currencies}
-      </span>
-      <button onClick={() => dispatch(Currency.actionsAsync.GetData({client: client,details:{}}))}>
+      <button onClick={() => dispatch(Currency.actionsAsync.GetData({client: client,details:{filter:{code:"",currency:"",continent:""}}}))}>
        Get Currencies 
       </button>
       <button onClick={() => dispatch(Currency.actions.Reset())}>
        Reset
       </button>
+      {countries.map((value,index) => 
+        <div key={index}>
+          {index}: {value.currency} - {value.name} 
+        </div>
+      )}
     </div>
   )
 }
