@@ -1,6 +1,12 @@
 {
   "name": "cra-template-typescript-redux-graphql",
   "version": "0.1.0",
+  "scripts": {
+    "format": "prettier --write ./template/src/**/*.{ts,tsx,css}",
+    "lint": "eslint './template/src/**/*.{ts,tsx}'",
+    "test": "jest",
+    "type-check": "tsc"
+  },
   "keywords": [
     "react",
     "create-react-app",
@@ -10,6 +16,7 @@
     "graphql"
   ],
   "description": "The base template for Create React App.",
+  "main":"template.json",
   "repository": {
     "type": "git",
     "url": "https://github.com/zanven42/cra-template-typescript-redux-graphql.git",
@@ -26,7 +33,6 @@
     "template",
     "template.json"
   ],
-  "main":"template.json",
   "devDependencies": {
     "@babel/preset-env": "^7.7.6",
     "@babel/preset-react": "^7.7.4",
